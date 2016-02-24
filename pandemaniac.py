@@ -29,7 +29,7 @@ G = nx.Graph()
 # Create the graph
 G.add_nodes_from(nodes)
 for node in nodes:
-    G.add_edges_from([(node, neighbor) for neighbor in jData[node]])
+    G.add_edges_from((node, neighbor) for neighbor in jData[node])
 
 
 
