@@ -22,22 +22,17 @@ jInFile = open(fileName)
 jStr = jInFile.read()
 jData = json.loads(jStr)
 nodes = jData.keys()
-    
+edges = map(lambda node: jData
+
 G = nx.Graph()
 
 # Create the graph
+G.add_nodes_from(nodes)
 for node in nodes:
-    currentNodes = G.nodes()
-    if node not in currentNodes:
-        G.add_node(node)
-        
-    neighbors = jData[node]
-    for neighbor in neighbors:
-        if neighbor not in currentNodes:
-            G.add_node(neighbor)
-            
-        G.add_edge(node, neighbor)
-        
+    G.add_edges_from([(node, neighbor) for neighbor in jData[node]])
+
+
+
 # Determine what nodes to use as seeds
 # Currently this is done by simply picking the nodes with the highest degrees.
 # This algorithm should definitely be improved upon.
