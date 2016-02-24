@@ -22,7 +22,6 @@ jInFile = open(fileName)
 jStr = jInFile.read()
 jData = json.loads(jStr)
 nodes = jData.keys()
-edges = map(lambda node: jData
 
 G = nx.Graph()
 
@@ -33,20 +32,12 @@ for node in nodes:
 
 
 
-# Determine what nodes to use as seeds
-# Currently this is done by simply picking the nodes with the highest degrees.
-# This algorithm should definitely be improved upon.
-degrees = G.degree()
-v = list(degrees.values())
-k = list(degrees.keys())
-        
-seeds = []
-for i in range(0, numSeeds):
-    val = max(v)
-    key = k[v.index(val)]
-    seeds.append(key)
-    v.remove(val)
-    k.remove(key)
+# Choose seeds based on highest betweenness centrality
+betweenness = nx.betweenness_centrality(G)
+seeds = sorted(betweenness, 
+               key=lambda node: betweenness[node], 
+               reverse=True)[0:numSeeds]
+
     
 ### Write the chosen seeds to an output file
 # Get the name of the outfile from the infile
@@ -54,9 +45,8 @@ jInd = fileName.find(".json")
 outName = fileName[0 : jInd]
 # Time to write
 outFile = open(outName, 'w')
-for i in range(0, 50):
-    for j in range(0, numSeeds):
-        outFile.write(str(seeds[j]))
-        outFile.write("\n")
+for i in xrange(50):
+    for j in xrange(numSeeds):
+        outFile.write("%s\n" % str(seeds[j]))
         
 outFile.close()
